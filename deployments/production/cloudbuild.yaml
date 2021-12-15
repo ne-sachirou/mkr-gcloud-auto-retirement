@@ -1,0 +1,53 @@
+---
+steps:
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args:
+      [
+        -c,
+        "docker pull asia.gcr.io/${PROJECT_ID}/mkr-gcloud-auto-retirement:latest || true",
+      ]
+  - name: clojure:openjdk-18
+    timeout: 60s
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - deployments/production/Dockerfile
+      - -t
+      - "asia.gcr.io/${PROJECT_ID}/mkr-gcloud-auto-retirement:${SHORT_SHA}"
+      - -t
+      - "asia.gcr.io/${PROJECT_ID}/mkr-gcloud-auto-retirement:latest"
+      # - --build-arg
+      # - BUILDKIT_INLINE_CACHE=1
+      - --cache-from
+      - "asia.gcr.io/${PROJECT_ID}/mkr-gcloud-auto-retirement:latest"
+      - .
+    # env:
+    #   - DOCKER_BUILDKIT=1
+    timeout: 300s
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+        push,
+        "asia.gcr.io/${PROJECT_ID}/mkr-gcloud-auto-retirement:${SHORT_SHA}",
+      ]
+  - name: gcr.io/cloud-builders/docker
+    args: [push, "asia.gcr.io/${PROJECT_ID}/mkr-gcloud-auto-retirement:latest"]
+  - name: gcr.io/cloud-builders/kubectl
+    entrypoint: bash
+    args: [./deployments/production/kubectl.sh]
+    env:
+      - CLOUDSDK_COMPUTE_REGION=asia-northeast1-a
+      - CLOUDSDK_CONTAINER_CLUSTER=c4se-2
+      - PROJECT_ID=$PROJECT_ID
+      - SHORT_SHA=$SHORT_SHA
+      # Set from the trigger.
+      - GCLOUD_SERVICE_ACCOUNT_KEY_JSON=$_GCLOUD_SERVICE_ACCOUNT_KEY_JSON
+      - MACKEREL_APIKEY=$_MACKEREL_APIKEY
+      - MACKEREL_HOST_ID=$_MACKEREL_HOST_ID
+      - MACKEREL_ROLE=$_MACKEREL_ROLE
+      - MACKEREL_SERVICE=$_MACKEREL_SERVICE
+substitutions:
+  _NAMESPACE_NAME: mkr-gcloud-auto-retirement
+timeout: 720s

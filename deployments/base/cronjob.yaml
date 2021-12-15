@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mkr-gcloud-auto-retirement
+spec:
+  concurrencyPolicy: Replace
+  failedJobsHistoryLimit: 3
+  schedule: "0 */1 * * *"
+  startingDeadlineSeconds: 180
+  successfulJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 360
+      backoffLimit: 3
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: mkr-gcloud-auto-retirement
+              image: asia.gcr.io/PROJECT_ID/mkr-gcloud-auto-retirement:latest
+              imagePullPolicy: Always
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+              env:
+                - name: GOOGLE_APPLICATION_CREDENTIALS
+                  value: secret/gcloud_service_account_key.json
+              envFrom:
+                - secretRef:
+                    name: mkr-gcloud-auto-retirement
+              volumeMounts:
+                - name: mkr-gcloud-auto-retirement-secret
+                  mountPath: /mnt/secret
+                  readOnly: true
+          volumes:
+            - name: mkr-gcloud-auto-retirement-secret
+              secret:
+                secretName: mkr-gcloud-auto-retirement

@@ -1,0 +1,49 @@
+---
+name: Test
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        clojure: ["1.10.3.1040"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: DeLaGuardo/setup-clojure@3.6
+        with:
+          cli: ${{ matrix.clojure }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: Setup cljstyle
+        run: |
+          curl -sLO https://raw.githubusercontent.com/greglook/cljstyle/main/script/install-cljstyle
+          chmod +x install-cljstyle
+          sudo ./install-cljstyle
+      - name: Setup clj-kondo
+        run: |
+          curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo
+          chmod +x install-clj-kondo
+          sudo ./install-clj-kondo
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2
+          key: ${{ runner.os }}-clj-${{ hashFiles('deps.edn') }}
+          restore-keys: |
+            ${{ runner.os }}-clj-
+      - uses: hadolint/hadolint-action@v1.6.0
+        with:
+          dockerfile: deployments/production/Dockerfile
+      - name: Test
+        run: |
+          make test-clj
+          npx prettier --check README.md
+          npx prettier --check .github/workflows/*.yml deployments/*/*.yaml
