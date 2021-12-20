@@ -9,6 +9,7 @@ RUN apt-get update \
  && dpkg -i mkr_*_all.deb \
  && apt-get purge -y \
     curl \
+ && rm -v mkr_*_all.deb \
  && apt-get autoremove -y \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
