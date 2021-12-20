@@ -5,7 +5,7 @@ metadata:
 spec:
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 3
-  schedule: "0 */1 * * *"
+  schedule: "@hourly"
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 3
   jobTemplate:
