@@ -5,7 +5,7 @@ WORKDIR /mnt
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     curl \
- && curl -sLO https://github.com/mackerelio/mkr/releases/download/v0.46.0/mkr_0.46.0-1_all.deb \
+ && curl -fsLO https://github.com/mackerelio/mkr/releases/download/v0.46.0/mkr_0.46.0-1_all.deb \
  && dpkg -i mkr_*_all.deb \
  && apt-get purge -y \
     curl \
