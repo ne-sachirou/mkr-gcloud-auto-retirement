@@ -1,3 +1,4 @@
+/.clj-kondo/.cache
 /deployments/*/secret
 
 # Created by https://www.toptal.com/developers/gitignore/api/clojure

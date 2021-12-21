@@ -18,17 +18,32 @@ run-remote: ## Run the main script in the remote cluster
 	stern mkr-gcloud-auto-retirement --tail=4
 
 .PHONY: test
-test: test-clj ## Test
-	hadolint deployments/production/Dockerfile
-	shellcheck entrypoint.sh deployments/production/kubectl.sh
-	(cd deployments/production && kustomize build) | kubeval --ignore-missing-schemas --strict
+test: test-clj test-k8s ## Test
+	shellcheck entrypoint.sh
 	npx prettier --check README.md
-	npx prettier --check .github/workflows/*.yml deployments/*/*.yaml
+	npx prettier --check .github/workflows/*.yml
+	yamllint .github/workflows/*.yml
 
 .PHONY: test-clj
 test-clj:
 	cljstyle check
-	cljstyle find | xargs -t clj-kondo --lint
+	cljstyle find | xargs -t clj-kondo --lint || true
+
+.PHONY: test-k8s
+test-k8s: test-k8s-production
+	npx prettier --check deployments/base/*.yaml
+	yamllint deployments/base/*.yaml
+
+.PHONY: test-k8s-production
+test-k8s-production:
+	npx prettier --check deployments/production/*.yaml
+	yamllint deployments/production/*.yaml
+	shellcheck deployments/production/kubectl.sh
+	(cd deployments/production && kustomize build) | kubeval --ignore-missing-schemas --strict
+	hadolint deployments/production/Dockerfile
+	docker build -t ne-sachirou/mkr-gcloud-auto-retirement:production -f deployments/production/Dockerfile --force-rm --pull .
+	container-structure-test test --image ne-sachirou/mkr-gcloud-auto-retirement:production --config deployments/production/container-structure-test.yml
+	#docker scan ne-sachirou/mkr-gcloud-auto-retirement:production || true
 
 .PHONY: upgrade
 upgrade: ## Upgrade deps

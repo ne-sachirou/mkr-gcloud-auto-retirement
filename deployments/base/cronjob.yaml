@@ -1,3 +1,4 @@
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -18,7 +19,6 @@ spec:
           containers:
             - name: mkr-gcloud-auto-retirement
               image: asia.gcr.io/PROJECT_ID/mkr-gcloud-auto-retirement:latest
-              imagePullPolicy: Always
               resources:
                 requests:
                   cpu: 100m
