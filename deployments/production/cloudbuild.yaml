@@ -47,7 +47,6 @@ steps:
       - MACKEREL_APIKEY=$_MACKEREL_APIKEY
       - MACKEREL_HOST_ID=$_MACKEREL_HOST_ID
       - MACKEREL_ROLE=$_MACKEREL_ROLE
-      - MACKEREL_SERVICE=$_MACKEREL_SERVICE
 substitutions:
   _NAMESPACE_NAME: mkr-gcloud-auto-retirement
 timeout: 720s

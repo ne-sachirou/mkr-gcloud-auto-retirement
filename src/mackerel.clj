@@ -2,6 +2,7 @@
   "Mackerel API client."
   (:require
     [clojure.data.json :as json]
+    [clojure.string :as str]
     [org.httpkit.client :as http]))
 
 
@@ -16,8 +17,9 @@
 
 (defn list-hosts-in-role
   "List hosts in the role."
-  [apikey service-name role-name]
-  (let [{:keys [status body error]} @(http/get (str api-endpoint "/api/v0/hosts")
+  [apikey role-fullname]
+  (let [[service-name role-name] (str/split role-fullname #" *: *")
+        {:keys [status body error]} @(http/get (str api-endpoint "/api/v0/hosts")
                                                {:headers {"X-Api-Key" apikey}
                                                 :query-params {:service service-name
                                                                :role role-name}})]

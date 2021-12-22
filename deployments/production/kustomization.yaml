@@ -10,7 +10,6 @@ secretGenerator:
       - MACKEREL_APIKEY=secret/MACKEREL_APIKEY
       - MACKEREL_HOST_ID=secret/MACKEREL_HOST_ID
       - MACKEREL_ROLE=secret/MACKEREL_ROLE
-      - MACKEREL_SERVICE=secret/MACKEREL_SERVICE
       - gcloud_service_account_key.json=secret/gcloud_service_account_key.json
     name: mkr-gcloud-auto-retirement
     type: Opaque

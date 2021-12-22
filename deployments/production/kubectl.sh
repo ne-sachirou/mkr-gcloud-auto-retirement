@@ -12,7 +12,6 @@ echo -n "$PROJECT_ID" > secret/GCLOUD_PROJECT_ID
 echo -n "$MACKEREL_APIKEY" > secret/MACKEREL_APIKEY
 echo -n "$MACKEREL_HOST_ID" > secret/MACKEREL_HOST_ID
 echo -n "$MACKEREL_ROLE" > secret/MACKEREL_ROLE
-echo -n "$MACKEREL_SERVICE" > secret/MACKEREL_SERVICE
 echo -n "$GCLOUD_SERVICE_ACCOUNT_KEY_JSON" > secret/gcloud_service_account_key.json
 set -x
 

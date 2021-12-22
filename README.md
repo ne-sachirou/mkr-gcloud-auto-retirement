@@ -21,7 +21,7 @@ Clojure と mkr を入れてください。
 - `GCLOUD_PROJECT_ID` : 監視する Compute Engine instance のある Google Cloud project の ID です。
 - `MACKEREL_APIKEY` : ホスト一覧を取得し、要らないホストを退役する爲の Mackerel の API キーです。Read と Write の權限が要ります
 - `MACKEREL_HOST_ID` : `mkr wrap` に指定するホスト ID です。mkr-gcloud-auto-retirement が正常に實行されるかチェック監視するものです。
-- `MACKEREL_SERVICE`, `MACKEREL_ROLE` : Google Cloud インテグレーションで登錄されたホストのサービスとロールです。このロールにあるホストは全て、一つの Google Cloud インテグレーションの設定から登錄されたものでなければなりません。他の Google Cloud インテグレーションの設定や Google Cloud インテグレーションによるものではないホストが混ざってゐた場合、閒違へて退役させる可能性があります。
+- `MACKEREL_ROLE` : Google Cloud インテグレーションで登錄されたホストのサービスとロールです (例: `service1:role1`)。このロールにあるホストは全て、一つの Google Cloud インテグレーションの設定から登錄されたものでなければなりません。他の Google Cloud インテグレーションの設定や Google Cloud インテグレーションによるものではないホストが混ざってゐた場合、閒違へて退役させる可能性があります。
 
 google-cloud-java が認證できるやうにしておいてください ( https://github.com/googleapis/google-cloud-java#authentication )。典型的には `GOOGLE_APPLICATION_CREDENTIALS` 環境變數を設定します。必要な權限は、Compute Engine の Compute インスタンス管理者です。
 
@@ -42,7 +42,7 @@ Cloud Build のトリガーに設定する変数は以下です。
 - `_GCLOUD_SERVICE_ACCOUNT_KEY_JSON` : Google Cloud API を實行する爲のサービスアカウントキーです。必要な權限は、Compute Engine の Compute インスタンス管理者です。
 - `_MACKEREL_APIKEY` : ホスト一覧を取得し、要らないホストを退役する爲の Mackerel の API キーです。Read と Write の權限が要ります
 - `_MACKEREL_HOST_ID` : `mkr wrap` に指定するホスト ID です。mkr-gcloud-auto-retirement が正常に實行されるかチェック監視するものです。
-- `_MACKEREL_SERVICE`, `_MACKEREL_ROLE` : Google Cloud インテグレーションで登錄されたホストのサービスとロールです。このロールにあるホストは全て、一つの Google Cloud インテグレーションの設定から登錄されたものでなければなりません。他の Google Cloud インテグレーションの設定や Google Cloud インテグレーションによるものではないホストが混ざってゐた場合、閒違へて退役させる可能性があります。
+- `_MACKEREL_ROLE` : Google Cloud インテグレーションで登錄されたホストのサービスとロールです (例: `service1:role1`)。このロールにあるホストは全て、一つの Google Cloud インテグレーションの設定から登錄されたものでなければなりません。他の Google Cloud インテグレーションの設定や Google Cloud インテグレーションによるものではないホストが混ざってゐた場合、閒違へて退役させる可能性があります。
 
 一時間毎に mkr-gcloud-auto-retirement が實行されます。
 
