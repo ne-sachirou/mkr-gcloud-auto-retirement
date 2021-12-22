@@ -50,5 +50,4 @@ Cloud Build のトリガーに設定する変数は以下です。
 
 - Cloud Build の設定等に一部、個人用の設定が紛れ込んでゐます。
 - 一つの Mackerel ロールのホストしか自動退役させられません。複數のロールから自動退役されたい場合は、複數 CronJob を起動してください。
-- Compute Engine instance と Mackerel ホストそれぞれの name しか比較しません。よりよくは、ホストの meta 等を見るべきです。
 - asia-northeast1 以外の Google Cloud region には對應してゐません。

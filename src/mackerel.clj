@@ -6,9 +6,14 @@
     [org.httpkit.client :as http]))
 
 
-(defn- Host
-  [{:keys [id name]}]
+(defn- GceHost
+  [{:keys [id meta name]}]
+  (if (not= "gce" (-> meta :cloud :provider))
+    (throw (Exception. (str "Host " name " is not a GCE instance")))
+    nil)
   {:id id
+   :meta {:cloud {:provider "gce"
+                  :metadata {:instance-id (-> meta :cloud :metadata :instance-id)}}}
    :name name})
 
 
@@ -25,9 +30,9 @@
                                                                :role role-name}})]
     (if error (throw error) nil)
     (if (or (< status 200) (<= 300 status))
-      (throw (Exception. (str "Error. Status is " status "." body)))
+      (throw (Exception. (str "Error. Status is " status ". " body)))
       nil)
-    (map Host
+    (map GceHost
          (-> body (json/read-str :key-fn keyword) :hosts))))
 
 
@@ -40,6 +45,6 @@
                                                            "X-Api-Key" apikey}})]
     (if error (throw error) nil)
     (if (or (< status 200) (<= 300 status))
-      (throw (Exception. (str "Error. Status is " status "." body)))
+      (throw (Exception. (str "Error. Status is " status ". " body)))
       nil)
     :ok))

@@ -7,7 +7,8 @@
 
 (defn- Instance
   [instance]
-  {:name (.getName instance)})
+  {:id (-> instance .getId str)
+   :name (.getName instance)})
 
 
 (defn- create-instances-client

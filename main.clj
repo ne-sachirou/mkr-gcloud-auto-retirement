@@ -17,12 +17,12 @@
                                                        ["asia-northeast1-a"
                                                         "asia-northeast1-b"
                                                         "asia-northeast1-c"])
-      compute-instance-names (map :name compute-instances)
+      compute-instance-ids (map :id compute-instances)
       hosts (mackerel/list-hosts-in-role mackerel-apikey
                                          mackerel-role)
-      missing-hosts (filter (fn [{:keys [name]}]
-                              (->> compute-instance-names
-                                   (some #{name})
+      missing-hosts (filter (fn [host]
+                              (->> compute-instance-ids
+                                   (some #{(-> host :meta :cloud :metadata :instance-id)})
                                    not))
                             hosts)]
   (doseq [host missing-hosts]
