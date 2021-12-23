@@ -41,7 +41,7 @@ test-k8s-production:
 	yamllint deployments/production/*.yaml
 	shellcheck deployments/production/kubectl.sh
 	(cd deployments/production && kustomize build) | kubeval --ignore-missing-schemas --strict
-	hadolint deployments/production/Dockerfile
+	if which hadolint ; then hadolint deployments/production/Dockerfile ; fi
 	docker build -t ne-sachirou/mkr-gcloud-auto-retirement:production -f deployments/production/Dockerfile --force-rm --pull .
 	container-structure-test test --image ne-sachirou/mkr-gcloud-auto-retirement:production --config deployments/production/container-structure-test.yml
 	#docker scan ne-sachirou/mkr-gcloud-auto-retirement:production || true

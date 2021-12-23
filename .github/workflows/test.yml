@@ -21,16 +21,31 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
+      - run: sudo apt-get update
       - name: Setup cljstyle
         run: |
-          curl -sLO https://raw.githubusercontent.com/greglook/cljstyle/main/script/install-cljstyle
+          curl -fsLO https://raw.githubusercontent.com/greglook/cljstyle/main/script/install-cljstyle
           chmod +x install-cljstyle
           sudo ./install-cljstyle
       - name: Setup clj-kondo
         run: |
-          curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo
+          curl -fsLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo
           chmod +x install-clj-kondo
           sudo ./install-clj-kondo
+      - name: Setup container-structured-test
+        run: |
+          curl -fsLO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+      - name: Setup kubeval
+        run: |
+          curl -fsLO https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+          tar xf kubeval-linux-amd64.tar.gz
+          sudo cp kubeval /usr/local/bin
+      - name: Setup shellcheck
+        run: sudo apt-get install -y --no-install-recommends shellcheck
+      - name: Setup yamllint
+        run: sudo apt-get install -y --no-install-recommends yamllint
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
         with:
@@ -42,8 +57,15 @@ jobs:
       - uses: hadolint/hadolint-action@v1.6.0
         with:
           dockerfile: deployments/production/Dockerfile
+      - name: Set dummy production secrets
+        working-directory: deployments/production
+        run: |
+          mkdir -p secret
+          echo -n PROJECT_ID > secret/GCLOUD_PROJECT_ID
+          echo -n MACKEREL_APIKEY > secret/MACKEREL_APIKEY
+          echo -n MACKEREL_HOST_ID > secret/MACKEREL_HOST_ID
+          echo -n MACKEREL_ROLE > secret/MACKEREL_ROLE
+          echo -n '{"GCLOUD_SERVICE_ACCOUNT_KEY:"JSON"}' > secret/gcloud_service_account_key.json
       - name: Test
         run: |
-          make test-clj
-          npx prettier --check README.md
-          npx prettier --check .github/workflows/*.yml deployments/*/*.yaml
+          make -j test
