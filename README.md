@@ -39,6 +39,8 @@ GitHub repository へ Cloud Build への接續を install し、git push でト�
 
 Cloud Build のトリガーに設定する変数は以下です。
 
+- `_CLOUDSDK_COMPUTE_REGION` : deploy する Kubernetes Engine のある region。`asia-northeast1-a` 等。
+- `_CLOUDSDK_CONTAINER_CLUSTER` : deploy する Kubernetes Engine の名前。
 - `_GCLOUD_SERVICE_ACCOUNT_KEY_JSON` : Google Cloud API を實行する爲のサービスアカウントキーです。必要な權限は、Compute Engine の Compute インスタンス管理者です。
 - `_MACKEREL_APIKEY` : ホスト一覧を取得し、要らないホストを退役する爲の Mackerel の API キーです。Read と Write の權限が要ります
 - `_MACKEREL_HOST_ID` : `mkr wrap` に指定するホスト ID です。mkr-gcloud-auto-retirement が正常に實行されるかチェック監視するものです。
@@ -48,6 +50,5 @@ Cloud Build のトリガーに設定する変数は以下です。
 
 ## 現狀の制限
 
-- Cloud Build の設定等に一部、個人用の設定が紛れ込んでゐます。
 - 一つの Mackerel ロールのホストしか自動退役させられません。複數のロールから自動退役されたい場合は、複數 CronJob を起動してください。
 - asia-northeast1 以外の Google Cloud region には對應してゐません。

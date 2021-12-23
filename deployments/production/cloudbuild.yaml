@@ -38,11 +38,11 @@ steps:
     entrypoint: bash
     args: [./deployments/production/kubectl.sh]
     env:
-      - CLOUDSDK_COMPUTE_REGION=asia-northeast1-a
-      - CLOUDSDK_CONTAINER_CLUSTER=c4se-2
       - PROJECT_ID=$PROJECT_ID
       - SHORT_SHA=$SHORT_SHA
       # Set from the trigger.
+      - CLOUDSDK_COMPUTE_REGION=$_CLOUDSDK_COMPUTE_REGION
+      - CLOUDSDK_CONTAINER_CLUSTER=$_CLOUDSDK_CONTAINER_CLUSTER
       - GCLOUD_SERVICE_ACCOUNT_KEY_JSON=$_GCLOUD_SERVICE_ACCOUNT_KEY_JSON
       - MACKEREL_APIKEY=$_MACKEREL_APIKEY
       - MACKEREL_HOST_ID=$_MACKEREL_HOST_ID
