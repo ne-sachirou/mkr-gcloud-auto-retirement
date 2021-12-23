@@ -6,15 +6,19 @@
     [org.httpkit.client :as http]))
 
 
-(defn- GceHost
+(defn GceHost
   [{:keys [id meta name]}]
-  (if (not= "gce" (-> meta :cloud :provider))
-    (throw (Exception. (str "Host " name " is not a GCE instance")))
-    nil)
   {:id id
    :meta {:cloud {:provider "gce"
                   :metadata {:instance-id (-> meta :cloud :metadata :instance-id)}}}
    :name name})
+
+
+(defn Host
+  [{:keys [id meta name] :as host}]
+  (cond (= "gce" (-> meta :cloud :provider)) (GceHost host)
+        :else {:id id
+               :name name}))
 
 
 (def api-endpoint "https://api.mackerelio.com")

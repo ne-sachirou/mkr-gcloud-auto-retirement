@@ -28,6 +28,7 @@ test: test-clj test-k8s ## Test
 test-clj:
 	cljstyle check
 	cljstyle find | xargs -t clj-kondo --lint || true
+	clojure -M:test
 
 .PHONY: test-k8s
 test-k8s: test-k8s-production
@@ -47,4 +48,4 @@ test-k8s-production:
 
 .PHONY: upgrade
 upgrade: ## Upgrade deps
-	clojure -M:dev -m antq.core
+	clojure -M:dev -m antq.core || true
