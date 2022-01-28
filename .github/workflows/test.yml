@@ -11,7 +11,7 @@ jobs:
   test:
     strategy:
       matrix:
-        clojure: ["1.10.3.1049"]
+        clojure: ["1.10.3.1069"]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -67,5 +67,4 @@ jobs:
           echo -n MACKEREL_ROLE > secret/MACKEREL_ROLE
           echo -n '{"GCLOUD_SERVICE_ACCOUNT_KEY:"JSON"}' > secret/gcloud_service_account_key.json
       - name: Test
-        run: |
-          make -j test
+        run: make -j test
