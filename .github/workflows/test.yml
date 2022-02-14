@@ -11,7 +11,7 @@ jobs:
   test:
     strategy:
       matrix:
-        clojure: ["1.10.3.1069"]
+        clojure: ["1.10.3.1082"]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -37,11 +37,11 @@ jobs:
           curl -fsLO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
           chmod +x container-structure-test-linux-amd64
           sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
-      - name: Setup kubeval
+      - name: Setup kubeconform
         run: |
-          curl -fsLO https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
-          tar xf kubeval-linux-amd64.tar.gz
-          sudo cp kubeval /usr/local/bin
+          curl -fsLO https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+          tar xf kubeconform-linux-amd64.tar.gz
+          sudo cp kubeconform /usr/local/bin
       - name: Setup shellcheck
         run: sudo apt-get install -y --no-install-recommends shellcheck
       - name: Setup yamllint
